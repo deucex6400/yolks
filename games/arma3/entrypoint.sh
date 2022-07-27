@@ -48,7 +48,7 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2 validate_mod=3
         if [[ $1 == 0 ]]; then # Server
             ${STEAMCMD_DIR}/steamcmd.sh +force_install_dir /home/container "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +app_update $2 $extraFlags $validateServer +quit | tee -a "${STEAMCMD_LOG}"
         elif [[ $1 == 3 ]]; then
-            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 +validate +quit | tee -a "${STEAMCMD_LOG}"
+            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 validate +quit | tee -a "${STEAMCMD_LOG}"
         else # Mod
             ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 +quit | tee -a "${STEAMCMD_LOG}"
         fi
