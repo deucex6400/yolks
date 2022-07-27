@@ -150,7 +150,7 @@ function ModsLowercase {
     echo -e "\n\tMaking mod ${CYAN}$1${NC} files/folders lowercase..."
     # Debugging
     echo "mod: item $1"
-    for SRC in `find ./$1 -depth`
+    for SRC in "`find ./$1 -depth`"
     do
         # Debugging
         echo "original: item ${SRC} for $1"
