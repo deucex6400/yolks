@@ -23,12 +23,12 @@ NC='\033[0m' # No Color
 # STARTUP, STARTUP_PARAMS, STEAM_USER, STEAM_PASS, SERVER_BINARY, MOD_FILE, MODIFICATIONS, SERVERMODS, OPTIONALMODS, UPDATE_SERVER, CLEAR_CACHE, VALIDATE_SERVER, VALIDATE_MODS , MODS_LOWERCASE, STEAMCMD_EXTRA_FLAGS, CDLC, STEAMCMD_APPID, HC_NUM, SERVER_PASSWORD, HC_HIDE, STEAMCMD_ATTEMPTS, BASIC_URL, DISABLE_MOD_UPDATES
 
 ## === GLOBAL VARS ===
-# validateServer, extraFlags, updateAttempt, modifiedStartup, allMods, CLIENT_MODS
+# validateServer, validateMod, extraFlags, updateAttempt, modifiedStartup, allMods, CLIENT_MODS
 
 ## === DEFINE FUNCTIONS ===
 #
 # Runs SteamCMD with specified variables and performs error handling.
-function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2 validate_mod=3; int id]
+function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
     # Clear previous SteamCMD log
     if [[ -f "${STEAMCMD_LOG}" ]]; then
         rm -f "${STEAMCMD_LOG:?}"
@@ -47,10 +47,8 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2 validate_mod=3
         # Check if updating server or mod
         if [[ $1 == 0 ]]; then # Server
             ${STEAMCMD_DIR}/steamcmd.sh +force_install_dir /home/container "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +app_update $2 $extraFlags $validateServer +quit | tee -a "${STEAMCMD_LOG}"
-        elif [[ $1 == 3 ]]; then
-            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 validate +quit | tee -a "${STEAMCMD_LOG}"
         else # Mod
-            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 +quit | tee -a "${STEAMCMD_LOG}"
+            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 $validateMod +quit | tee -a "${STEAMCMD_LOG}"
         fi
 
         # Error checking for SteamCMD
@@ -250,6 +248,9 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
 
     ## Update mods
     if [[ -n $allMods ]] && [[ ${DISABLE_MOD_UPDATES} != 1 ]]; then
+        if [[ ${VALIDATE_MODS} == 1 ]]; then # Validate will be added as a parameter if specified
+            echo -e "\t${CYAN}Mod validation enabled.${NC} (This may take extra time to complete)"
+        fi
         echo -e "\n${GREEN}[UPDATE]:${NC} Checking all ${CYAN}Steam Workshop mods${NC} for updates..."
         for modID in $(echo $allMods | sed -e 's/@//g')
         do
@@ -269,7 +270,7 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                 latestUpdate=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep '<p id=' | head -1 | cut -d'"' -f2)
 
                 # If the update time is valid and newer than the local directory's creation date, or the mod hasn't been downloaded yet, download the mod
-                if [[ ! -d $modDir ]] || [[ ( -n $latestUpdate ) && ( $latestUpdate =~ ^[0-9]+$ ) && ( $latestUpdate > $(find $modDir | head -1 | xargs stat -c%Y) ) ]]; then
+                if [[ ! -d $modDir ]] || [[ ${VALIDATE_MODS} == 1]] || [[ ( -n $latestUpdate ) && ( $latestUpdate =~ ^[0-9]+$ ) && ( $latestUpdate > $(find $modDir | head -1 | xargs stat -c%Y) ) ]]; then
                     # Get the mod's name from the Workshop page as well
                     modName=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep 'workshopItemTitle' | cut -d'>' -f2 | cut -d'<' -f1)
                     if [[ -z $modName ]]; then # Set default name if unavailable
@@ -277,8 +278,12 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                     fi
                     if [[ ! -d $modDir ]]; then
                         echo -e "\n${GREEN}[UPDATE]:${NC} Downloading new Mod: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
+                    elif [[ ${VALIDATE_MODS} == 1 ]]; then # Validate will be added as a parameter if specified
+                        echo -e "\n${GREEN}[REPAIR]:${NC} Validating mod: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
+                        validateMod="validate"
                     else
                         echo -e "\n${GREEN}[UPDATE]:${NC} Mod update found for: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
+                        validateMod=""
                     fi
                     if [[ -n $latestUpdate ]] && [[ $latestUpdate =~ ^[0-9]+$ ]]; then # Notify last update date, if valid
                         echo -e "\tMod was last updated: ${CYAN}$(date -d @${latestUpdate})${NC}"
