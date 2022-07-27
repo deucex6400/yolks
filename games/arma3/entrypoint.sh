@@ -159,8 +159,7 @@ function ModsLowercase {
         echo "new: item ${DST} for $1"
         if [ "${SRC}" != "${DST}" ]
         then
-            #[ ! -e "${DST}" ] && mv -T "${SRC}" "${DST}"
-            echo "move simulation..."
+            [ ! -e "${DST}" ] && mv -T "${SRC}" "${DST}"            
         fi
     done <<< "`find ./$1 -depth`"
 }
