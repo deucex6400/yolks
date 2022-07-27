@@ -150,7 +150,11 @@ function ModsLowercase {
     echo -e "\n\tMaking mod ${CYAN}$1${NC} files/folders lowercase..."
     for SRC in `find ./$1 -depth`
     do
+        # Debugging
+        echo "original: item ${SRC} for $1"
         DST=`dirname "${SRC}"`/`basename "${SRC}" | tr '[A-Z]' '[a-z]'`
+        #Debugging end
+        echo "new: item ${DST} for $1"
         if [ "${SRC}" != "${DST}" ]
         then
             [ ! -e "${DST}" ] && mv -T "${SRC}" "${DST}"
