@@ -323,6 +323,7 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
 
         echo -e "${GREEN}[UPDATE]:${NC} Steam Workshop mod update check ${GREEN}complete${NC}!"
     fi
+fi
 
 # Check if specified server binary exists.
 if [[ ! -f ./${SERVER_BINARY} ]]; then
