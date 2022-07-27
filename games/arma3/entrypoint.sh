@@ -226,7 +226,7 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
     echo -e "${GREEN}[UPDATE]:${NC} Checking for game server updates with App ID: ${CYAN}${STEAMCMD_APPID}${NC}..."
 
     if [[ ${VALIDATE_SERVER} == 1 ]]; then # Validate will be added as a parameter if specified
-        echo -e "\t${CYAN}Mod validation enabled.${NC} (This may take extra time to complete)"
+        echo -e "\t${CYAN}Server validation enabled.${NC} (This may take extra time to complete)"
         validateServer="validate"
     else
         validateServer=""
