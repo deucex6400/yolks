@@ -27,8 +27,7 @@ RUN         dpkg --add-architecture i386 \
                 libnss-wrapper \
                 libnss-wrapper:i386 \
                 libtbb2 \
-                libtbb2:i386\
-                rename
+                libtbb2:i386
 
 ## Configure locale
 RUN         update-locale lang=en_US.UTF-8 \
