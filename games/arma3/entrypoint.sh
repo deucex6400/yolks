@@ -148,6 +148,8 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
 # Takes a directory (string) as input, and recursively makes all files & folders lowercase.
 function ModsLowercase {
     echo -e "\n\tMaking mod ${CYAN}$1${NC} files/folders lowercase..."
+    # Debugging
+    echo "mod: item $1"
     for SRC in `find ./$1 -depth`
     do
         # Debugging
