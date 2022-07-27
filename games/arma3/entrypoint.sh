@@ -151,12 +151,8 @@ function ModsLowercase {
     # Debugging
     echo "mod: item $1"
     while read -r SRC;
-    do
-        # Debugging
-        echo "original: item ${SRC} for $1"
+    do        
         DST=`dirname "${SRC}"`/`basename "${SRC}" | tr '[A-Z]' '[a-z]'`
-        #Debugging end
-        echo "new: item ${DST} for $1"
         if [ "${SRC}" != "${DST}" ]
         then
             [ ! -e "${DST}" ] && mv -T "${SRC}" "${DST}"            
