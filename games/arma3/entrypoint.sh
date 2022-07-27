@@ -23,12 +23,12 @@ NC='\033[0m' # No Color
 # STARTUP, STARTUP_PARAMS, STEAM_USER, STEAM_PASS, SERVER_BINARY, MOD_FILE, MODIFICATIONS, SERVERMODS, OPTIONALMODS, UPDATE_SERVER, CLEAR_CACHE, VALIDATE_SERVER, VALIDATE_MODS , MODS_LOWERCASE, STEAMCMD_EXTRA_FLAGS, CDLC, STEAMCMD_APPID, HC_NUM, SERVER_PASSWORD, HC_HIDE, STEAMCMD_ATTEMPTS, BASIC_URL, DISABLE_MOD_UPDATES
 
 ## === GLOBAL VARS ===
-# validateServer, validateMods, extraFlags, updateAttempt, modifiedStartup, allMods, CLIENT_MODS
+# validateServer, extraFlags, updateAttempt, modifiedStartup, allMods, CLIENT_MODS
 
 ## === DEFINE FUNCTIONS ===
 #
 # Runs SteamCMD with specified variables and performs error handling.
-function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
+function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2 validate_mod=3; int id]
     # Clear previous SteamCMD log
     if [[ -f "${STEAMCMD_LOG}" ]]; then
         rm -f "${STEAMCMD_LOG:?}"
@@ -47,8 +47,10 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
         # Check if updating server or mod
         if [[ $1 == 0 ]]; then # Server
             ${STEAMCMD_DIR}/steamcmd.sh +force_install_dir /home/container "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +app_update $2 $extraFlags $validateServer +quit | tee -a "${STEAMCMD_LOG}"
+        elif [[ $1 == 3 ]]; then
+            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 +validate +quit | tee -a "${STEAMCMD_LOG}"
         else # Mod
-            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 $validateMods +quit | tee -a "${STEAMCMD_LOG}"
+            ${STEAMCMD_DIR}/steamcmd.sh "+login \"${STEAM_USER}\" \"${STEAM_PASS}\"" +workshop_download_item $GAME_ID $2 +quit | tee -a "${STEAMCMD_LOG}"
         fi
 
         # Error checking for SteamCMD
@@ -232,13 +234,6 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
         validateServer=""
     fi
 
-    if [[ ${VALIDATE_MODS} == 1 ]]; then # Validate will be added as a parameter if specified
-        echo -e "\t${CYAN}Mod validation enabled.${NC} (This may take extra time to complete)"
-        validateMods="validate"
-    else
-        validateMods=""
-    fi
-
     # Determine what extra flags should be set
     if [[ -n ${STEAMCMD_EXTRA_FLAGS} ]]; then
         echo -e "\t(${YELLOW}Advanced${NC}) Extra SteamCMD flags specified: ${CYAN}${STEAMCMD_EXTRA_FLAGS}${NC}\n"
@@ -323,6 +318,14 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
 
         echo -e "${GREEN}[UPDATE]:${NC} Steam Workshop mod update check ${GREEN}complete${NC}!"
     fi
+
+    ## Validate mods
+    if [[ ${VALIDATE_MODS} = 1 ]]; then
+    for modID in $(echo $allMods | sed -e 's/@//g')
+    do
+        RunSteamCMD 3 $modID
+    done
+
 fi
 
 # Check if specified server binary exists.
