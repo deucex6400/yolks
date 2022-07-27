@@ -278,6 +278,7 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                     fi
                     if [[ ! -d $modDir ]]; then
                         echo -e "\n${GREEN}[UPDATE]:${NC} Downloading new Mod: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
+                        validateMod=""
                     elif [[ ${VALIDATE_MODS} == 1 ]]; then # Validate will be added as a parameter if specified
                         echo -e "\n${GREEN}[REPAIR]:${NC} Validating mod: \"${CYAN}${modName}${NC}\" (${CYAN}${modID}${NC})"
                         validateMod="validate"
