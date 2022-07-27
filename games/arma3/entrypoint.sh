@@ -150,7 +150,7 @@ function ModsLowercase {
     echo -e "\n\tMaking mod ${CYAN}$1${NC} files/folders lowercase..."
     # Debugging
     echo "mod: item $1"
-    for SRC in `find ./$1 -depth`
+    while read -r SRC;
     do
         # Debugging
         echo "original: item ${SRC} for $1"
@@ -159,9 +159,10 @@ function ModsLowercase {
         echo "new: item ${DST} for $1"
         if [ "${SRC}" != "${DST}" ]
         then
-            [ ! -e "${DST}" ] && mv -T "${SRC}" "${DST}"
+            #[ ! -e "${DST}" ] && mv -T "${SRC}" "${DST}"
+            echo "move simulation..."
         fi
-    done
+    done <<< "`find ./$1 -depth`"
 }
 
 # Removes duplicate items from a semicolon delimited string
