@@ -321,11 +321,11 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
 
     ## Validate mods
     if [[ ${VALIDATE_MODS} = 1 ]]; then
-    for modID in $(echo $allMods | sed -e 's/@//g')
-    do
-        RunSteamCMD 3 $modID
-    done
-
+        for modID in $(echo $allMods | sed -e 's/@//g')
+        do
+            RunSteamCMD 3 $modID
+        done;
+    fi
 fi
 
 # Check if specified server binary exists.
