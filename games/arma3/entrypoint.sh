@@ -109,11 +109,11 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
                 #mv -f ./Steam/steamapps/workshop/content/$GAME_ID/$2/* ./@$2
                 #rm -d ./Steam/steamapps/workshop/content/$GAME_ID/$2\
                 # Debugging
-                echo -e "\n${GREEN}[DEBUGGING]:${NC} Test create symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2}/ ./@${2}'" 
+                echo -e "\n${PURPLE}[DEBUGGING]:${NC} Test create symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2}/ ./@${2}'" 
                 # Make the mods contents all lowercase
                 #ModsLowercase @$2
                 # Debugging
-                echo -e "\n${GREEN}[DEBUGGING]:${NC} Fix modslowercase"
+                echo -e "\n${PURPLE}[DEBUGGING]:${NC} Fix modslowercase"
                 # Move any .bikey's to the keys directory
                 echo -e "\tMoving any mod ${CYAN}.bikey${NC} files to the ${CYAN}~/keys/${NC} folder..."
                 if [[ $1 == 1 ]]; then
@@ -258,7 +258,7 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
     ## Update mods
     if [[ -n $allMods ]] && [[ ${DISABLE_MOD_UPDATES} != 1 ]]; then
         # Debugging
-        echo -e "\n${GREEN}[DEBUGGING]:${NC} Test cleanup all mod symlinks Test remove all symlinks: 'find ./ -xtype l -delete'"
+        echo -e "\n${PURPLE}[DEBUGGING]:${NC} Test cleanup all mod symlinks Test remove all symlinks: 'find ./ -xtype l -delete'"
         if [[ ${VALIDATE_MODS} == 1 ]]; then # Validate will be added as a parameter if specified
             echo -e "\t${CYAN}Mod validation enabled.${NC} (This may take extra time to complete)"
         fi
