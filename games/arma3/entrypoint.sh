@@ -257,8 +257,8 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
     ## Update mods
     if [[ -n $allMods ]] && [[ ${DISABLE_MOD_UPDATES} != 1 ]]; then
         # Debugging
-        echo -e "\n${PURPLE}[DEBUGGING]:${NC} Test cleanup all mod symlinks Test remove all symlinks: 'find ./ -xtype l -delete'"
-        find ./ -xtype l -delete
+        echo -e "\n${PURPLE}[DEBUGGING]:${NC} Deleting all mod symlinks : 'find ./@* -delete'"
+        find ./@* -delete
         if [[ ${VALIDATE_MODS} == 1 ]]; then # Validate will be added as a parameter if specified
             echo -e "\t${CYAN}Mod validation enabled.${NC} (This may take extra time to complete)"
         fi
