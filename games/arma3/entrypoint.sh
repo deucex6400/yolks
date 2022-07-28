@@ -149,6 +149,8 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
             else # Mod
                 echo -e "\t${RED}Final attempt made! ${YELLOW}Unable to complete mod download/update. ${CYAN}Skipping...${NC}"
                 echo -e "\t(You may try again later, or manually upload this mod to your server via SFTP)"
+                # Debugging: Remove symlink if download failed!
+                echo -e "\n${PURPLE}[DEBUGGING]:${NC} Deleting Symlink For Failed Download: rm -r ./@${2}"
                 sleep 3
             fi
         fi
