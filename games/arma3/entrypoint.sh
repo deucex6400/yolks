@@ -17,6 +17,7 @@ CYAN='\033[0;36m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
 RED='\033[0;31m'
+PURPLE='\033[0;35m'
 NC='\033[0m' # No Color
 
 ## === ENVIRONMENT VARS ===
@@ -33,8 +34,6 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
     if [[ -f "${STEAMCMD_LOG}" ]]; then
         rm -f "${STEAMCMD_LOG:?}"
     fi
-    # Debugging
-    echo "Test remove all symlinks: 'find ./ -xtype l -delete'"
 
     updateAttempt=0
     while (( $updateAttempt < $STEAMCMD_ATTEMPTS )); do # Loop for specified number of attempts
@@ -103,22 +102,26 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
             if [[ $1 == 0 ]]; then # Server
                 echo -e "\n${GREEN}[UPDATE]: Game server is up to date!${NC}"
             else # Mod
-                # Debugging
-                echo "Clear previous symlink: 'unlink ./@"$2"'"
                 # Move the downloaded mod to the root directory, and replace existing mod if needed
                 #mkdir -p ./@$2
                 #rm -rf ./@$2/*
-                #Debugging
+                # Debugging
                 #mv -f ./Steam/steamapps/workshop/content/$GAME_ID/$2/* ./@$2
                 #rm -d ./Steam/steamapps/workshop/content/$GAME_ID/$2\
-                echo "Test create symlink: 'ln -s ./Steam/steamapps/workshop/content/"$GAME_ID"/"$2"/* ./@"$2"'" 
+                # Debugging
+                echo -e "\n${GREEN}[DEBUGGING]:{$NC} Test create symlink: 'ln -s ./Steam/steamapps/workshop/content/{$GAME_ID}/{$2}/ ./@{$2}'" 
                 # Make the mods contents all lowercase
-                ModsLowercase @$2
+                #ModsLowercase @$2
+                # Debugging
+                echo -e "\n${GREEN}[DEBUGGING]:{$NC} Fix modslowercase"
                 # Move any .bikey's to the keys directory
                 echo -e "\tMoving any mod ${CYAN}.bikey${NC} files to the ${CYAN}~/keys/${NC} folder..."
                 if [[ $1 == 1 ]]; then
-                    find ./@$2 -name "*.bikey" -type f -exec cp {} ./keys \;
-                else
+                    # Debugging
+                    #find ./@$2 -name "*.bikey" -type f -exec cp {} ./keys \;
+                    #find ./Steam/steamapps/workshop/content/$GAME_ID/$2/ -name "*.bikey" -type f -exec cp {} ./keys \;
+                    echo "Test copy keys..."                
+                else # Debugging - What do we want to do with this? Do we even care about this?
                     # Give optional mod keys a custom name which can be checked later for deleting unconfigured mods
                     for file in $(find ./@$2 -name "*.bikey" -type f); do
                         filename=$(basename ${file})
@@ -154,8 +157,6 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
 # Takes a directory (string) as input, and recursively makes all files & folders lowercase.
 function ModsLowercase {
     echo -e "\n\tMaking mod ${CYAN}$1${NC} files/folders lowercase..."
-    # Debugging
-    echo "mod: item $1"
     while read -r SRC;
     do        
         DST=`dirname "${SRC}"`/`basename "${SRC}" | tr '[A-Z]' '[a-z]'`
@@ -256,6 +257,8 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
 
     ## Update mods
     if [[ -n $allMods ]] && [[ ${DISABLE_MOD_UPDATES} != 1 ]]; then
+        # Debugging
+        echo -e "\n${GREEN}[DEBUGGING]:{$NC} Test cleanup all mod symlinks Test remove all symlinks: 'find ./ -xtype l -delete'"
         if [[ ${VALIDATE_MODS} == 1 ]]; then # Validate will be added as a parameter if specified
             echo -e "\t${CYAN}Mod validation enabled.${NC} (This may take extra time to complete)"
         fi
