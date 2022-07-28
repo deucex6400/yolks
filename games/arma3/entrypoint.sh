@@ -112,7 +112,7 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
                 echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}'" 
                 ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}
                 # Make the mods contents all lowercase
-                ModsLowercase @$2
+                ModsLowercase ./Steam/steamapps/workshop/content/${GAME_ID}/$2
                 # Debugging
                 echo -e "\n${PURPLE}[DEBUGGING]:${NC} Validate modslowercase"
                 # Move any .bikey's to the keys directory
