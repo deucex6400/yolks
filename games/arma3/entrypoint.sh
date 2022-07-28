@@ -136,6 +136,8 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
                     mkdir ./@$2_optional
                 fi
                 echo -e "${GREEN}[UPDATE]: Mod download/update successful!${NC}"
+                # Debugging: Set timestamp for successful mod here
+                touch ./Steam/steamapps/workshop/content/${GAME_ID}/${2}/timestamp
             fi
             break
         fi
@@ -274,14 +276,20 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                     modDir=@${modID}_optional
                 else
                     modType=1
-                    modDir=@${modID}
+                    # Debugging
+                    #modDir=@${modID}
+                    modDir=./Steam/steamapps/workshop/content/$GAME_ID/${modID}
+                    echo -e "\n${PURPLE}[DEBUGGING]:${NC} MODDIR: ${modDir}"
+                    
                 fi
 
                 # Get mod's latest update in epoch time from its Steam Workshop changelog page
                 latestUpdate=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep '<p id=' | head -1 | cut -d'"' -f2)
 
                 # If the update time is valid and newer than the local directory's creation date, or the mod hasn't been downloaded yet, download the mod
-                if [[ ! -d $modDir ]] || [[ ${VALIDATE_MODS} == 1 ]] || [[ ( -n $latestUpdate ) && ( $latestUpdate =~ ^[0-9]+$ ) && ( $latestUpdate > $(find $modDir | head -1 | xargs stat -c%Y) ) ]]; then
+                # Debugging - We need a new way to calculate when mod was last updated - changed to $modDir\timestamp
+                #  We could initially set a updated file and check it's timestamp, later using JSON implentation
+                if [[ ! -d $modDir ]] || [[ ${VALIDATE_MODS} == 1 ]] || [[ ( -n $latestUpdate ) && ( $latestUpdate =~ ^[0-9]+$ ) && ( $latestUpdate > $(find $modDir\timestamp | head -1 | xargs stat -c%Y) ) ]]; then
                     # Get the mod's name from the Workshop page as well
                     modName=$(curl -sL https://steamcommunity.com/sharedfiles/filedetails/changelog/$modID | grep 'workshopItemTitle' | cut -d'>' -f2 | cut -d'<' -f1)
                     if [[ -z $modName ]]; then # Set default name if unavailable
