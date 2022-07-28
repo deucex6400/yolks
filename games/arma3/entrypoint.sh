@@ -280,7 +280,7 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                     # We need to make our symlink here?
                     
                     #modDir=@${modID}
-                    echo -e "\n${PURPLE}[DEBUGGING]:${NC} MODDIR: ${modID}"
+                    #echo -e "\n${PURPLE}[DEBUGGING]:${NC} MODDIR: ${modID}"
                     modDir=./Steam/steamapps/workshop/content/$GAME_ID/${modID}
                     echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${modID} ./@${modID}'" 
                     ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${modID} ./@${modID}                    
