@@ -415,8 +415,11 @@ fi
 
 # Start the Server
 echo -e "\n${GREEN}[STARTUP]:${NC} Starting server with the following startup command:"
+# Debugging: Make sure this is ok!
+ArmaServerLogsLocation=./ServerLogs/ArmaServerLog_$(date '+%Y-%m-%d_%H:%M:%S').log
+echo -e "\n${GREEN}[LOGGING]:${NC} Arma Server Logs available at: "
 echo -e "${CYAN}${modifiedStartup}${NC}\n"
-${modifiedStartup}
+${modifiedStartup} | tee ${ArmaServerLogsLocation}
 
 if [ $? -ne 0 ]; then
     echo -e "\n${RED}PTDL_CONTAINER_ERR: There was an error while attempting to run the start command.${NC}\n"
