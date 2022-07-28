@@ -108,9 +108,9 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
                 # Debugging
                 #mv -f ./Steam/steamapps/workshop/content/$GAME_ID/$2/* ./@$2
                 #rm -d ./Steam/steamapps/workshop/content/$GAME_ID/$2\
-                # Debugging
-                echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}'" 
-                ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}
+                # Debugging - Disabled - we are not catching mods that dont need to be updated!
+                #echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}'" 
+                #ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}
                 # Make the mods contents all lowercase
                 ModsLowercase ./Steam/steamapps/workshop/content/${GAME_ID}/$2
                 # Debugging
@@ -277,9 +277,13 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                 else
                     modType=1
                     # Debugging
+                    # We need to make our symlink here?
+                    
                     #modDir=@${modID}
                     modDir=./Steam/steamapps/workshop/content/$GAME_ID/${modID}
                     echo -e "\n${PURPLE}[DEBUGGING]:${NC} MODDIR: ${modDir}"
+                    echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}'" 
+                    ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}                    
                     
                 fi
 
