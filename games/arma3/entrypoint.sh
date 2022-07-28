@@ -109,21 +109,18 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
                 #mv -f ./Steam/steamapps/workshop/content/$GAME_ID/$2/* ./@$2
                 #rm -d ./Steam/steamapps/workshop/content/$GAME_ID/$2\
                 # Debugging
-                echo -e "\n${PURPLE}[DEBUGGING]:${NC} Test create symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2}/ ./@${2}'" 
+                echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}'" 
                 ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}
                 # Make the mods contents all lowercase
                 ModsLowercase @$2
                 # Debugging
                 echo -e "\n${PURPLE}[DEBUGGING]:${NC} Validate modslowercase"
                 # Move any .bikey's to the keys directory
-                echo -e "\tMoving any mod ${CYAN}.bikey${NC} files to the ${CYAN}~/keys/${NC} folder..."
+                echo -e "\tCopying any mod ${CYAN}.bikey${NC} files to the ${CYAN}~/keys/${NC} folder..."
                 if [[ $1 == 1 ]]; then
                     # Debugging
-                    find ./@$2 -name "*.bikey" -type f -exec cp {} ./keys \;
-                    #Debugging - We may not need this
-                    #find ./Steam/steamapps/workshop/content/$GAME_ID/$2/ -name "*.bikey" -type f -exec cp {} ./keys \;
-                    echo "Test copy keys..."                
-                else # Debugging - What do we want to do with this? Do we even care about this?
+                    find ./@$2 -name "*.bikey" -type f -exec cp {} ./keys \;            
+                else
                     # Give optional mod keys a custom name which can be checked later for deleting unconfigured mods
                     for file in $(find ./@$2 -name "*.bikey" -type f); do
                         filename=$(basename ${file})
