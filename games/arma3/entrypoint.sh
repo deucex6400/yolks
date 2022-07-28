@@ -110,7 +110,7 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
                 #rm -d ./Steam/steamapps/workshop/content/$GAME_ID/$2\
                 # Debugging
                 echo -e "\n${PURPLE}[DEBUGGING]:${NC} Test create symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2}/ ./@${2}'" 
-                ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2}/ ./@${2}/
+                ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}
                 # Make the mods contents all lowercase
                 ModsLowercase @$2
                 # Debugging
