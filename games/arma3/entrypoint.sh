@@ -33,6 +33,8 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
     if [[ -f "${STEAMCMD_LOG}" ]]; then
         rm -f "${STEAMCMD_LOG:?}"
     fi
+    # Debugging
+    echo "Test remove all symlinks: 'find ./ -xtype l -delete'"
 
     updateAttempt=0
     while (( $updateAttempt < $STEAMCMD_ATTEMPTS )); do # Loop for specified number of attempts
@@ -101,11 +103,15 @@ function RunSteamCMD { #[Input: int server=0 mod=1 optional_mod=2; int id]
             if [[ $1 == 0 ]]; then # Server
                 echo -e "\n${GREEN}[UPDATE]: Game server is up to date!${NC}"
             else # Mod
+                # Debugging
+                echo "Clear previous symlink: 'unlink ./@"$2"'"
                 # Move the downloaded mod to the root directory, and replace existing mod if needed
-                mkdir -p ./@$2
-                rm -rf ./@$2/*
-                mv -f ./Steam/steamapps/workshop/content/$GAME_ID/$2/* ./@$2
-                rm -d ./Steam/steamapps/workshop/content/$GAME_ID/$2
+                #mkdir -p ./@$2
+                #rm -rf ./@$2/*
+                #Debugging
+                #mv -f ./Steam/steamapps/workshop/content/$GAME_ID/$2/* ./@$2
+                #rm -d ./Steam/steamapps/workshop/content/$GAME_ID/$2\
+                echo "Test create symlink: 'ln -s ./Steam/steamapps/workshop/content/"$GAME_ID"/"$2"/* ./@"$2"'" 
                 # Make the mods contents all lowercase
                 ModsLowercase @$2
                 # Move any .bikey's to the keys directory
