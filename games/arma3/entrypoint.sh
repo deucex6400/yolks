@@ -282,8 +282,8 @@ if [[ ${UPDATE_SERVER} == 1 ]]; then
                     #modDir=@${modID}
                     modDir=./Steam/steamapps/workshop/content/$GAME_ID/${modID}
                     echo -e "\n${PURPLE}[DEBUGGING]:${NC} MODDIR: ${modDir}"
-                    echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}'" 
-                    ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${2} ./@${2}                    
+                    echo -e "\n${PURPLE}[DEBUGGING]:${NC} Creating symlink: 'ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${modDir} ./@${modDir}'" 
+                    ln -s ./Steam/steamapps/workshop/content/${GAME_ID}/${modDir} ./@${modDir}                    
                     
                 fi
 
