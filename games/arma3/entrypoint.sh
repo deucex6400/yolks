@@ -397,6 +397,10 @@ else
     export LD_PRELOAD=/usr/lib/i386-linux-gnu/libnss_wrapper.so
 fi
 
+if [[ ${SERVER_BINARY} == *"profiling"* ]]; then # If profiling branch executable is detected, allow execution of file. This is a manually uploaded dev build.
+    chmod +x ${SERVER_BINARY}
+fi
+
 # Replace Startup Variables
 modifiedStartup=`eval echo $(echo ${STARTUP} | sed -e 's/{{/${/g' -e 's/}}/}/g')`
 
