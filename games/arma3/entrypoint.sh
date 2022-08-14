@@ -397,7 +397,8 @@ else
     export LD_PRELOAD=/usr/lib/i386-linux-gnu/libnss_wrapper.so
 fi
 
-if [[ ${SERVER_BINARY} == *"profiling"* ]]; then # If profiling branch executable is detected, allow execution of file. This is a manually uploaded dev build.
+# If profiling branch executable is detected, allow execution of file. This is a manually uploaded dev build.
+if [[ ${SERVER_BINARY} == *"profiling"* ]] && [[ -f "${SERVER_BINARY}" ]]; then 
     chmod +x ${SERVER_BINARY}
 fi
 
