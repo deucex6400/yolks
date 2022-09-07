@@ -22,10 +22,3 @@ RUN         useradd -m -d /home/container -s /bin/bash container
 USER        container
 ENV         USER=container HOME=/home/container
 WORKDIR     /home/container
-
-## Install Ark Server Tools
-RUN curl -sL https://git.io/arkmanager | sudo bash -s container
-
-## Copy over and execute entrypoint.sh
-COPY        ./entrypoint.sh /entrypoint.sh
-CMD         [ "/bin/bash", "/entrypoint.sh" ]
